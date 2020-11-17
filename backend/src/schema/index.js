@@ -5,7 +5,7 @@ type User {
   _id : ID!
   username: String!
   password: String
-  favSubreddits: [String!]
+  favSubreddits: [String]
 }
 
 
@@ -20,6 +20,10 @@ input UserInput {
   password: String!
 }
 
+input AddSubredditToUser {
+  userId: ID!
+  subreddit: String!
+}
   
 
  type RootQuery  {
@@ -30,6 +34,7 @@ input UserInput {
 
 type RootMutation  {
   createUser(userInput: UserInput) : User
+  updateUser(input: AddSubredditToUser) : User
 }
 
  schema {

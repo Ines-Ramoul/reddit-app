@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
+var ObjectId = require('mongodb').ObjectID;
 const User = require('../../models/User')
 const jwt = require('jsonwebtoken')
 
@@ -40,5 +41,18 @@ module.exports= {
         }
         const token = jwt.sign({userId : checkUser.id, username : checkUser.username}, 'supersecretkey', {expiresIn : '1h'});
         return { userId: checkUser.id, token : token, tokenExpiration : 1 };
+    },
+    updateUser : async ({userId, subreddit}) => {
+      var u_id = new ObjectId(userId);
+      const updatedUser = await User.findOneAndUpdate(
+        { _id: u_id },
+        { $push: { favSubreddits: subreddit } },
+        { returnNewDocument: true }
+      );
+      if (updatedUser==null){
+        throw new Error("User not updated !")
+      }
+      return updatedUser;
+
     }
   }
